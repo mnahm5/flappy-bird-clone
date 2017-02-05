@@ -14,10 +14,11 @@ public class FlappyBird extends ApplicationAdapter {
 
     private Texture[] birds;
     private int flapState = 0;
-    float birdY = 0;
-    float velocity = 0;
+    private float birdY = 0;
+    private float velocity = 0;
 
-    int gameState = 0;
+    private int gameState = 0;
+    private float gravity = 2;
 
     @Override
     public void create () {
@@ -58,12 +59,17 @@ public class FlappyBird extends ApplicationAdapter {
     private void Update()
     {
         if (gameState != 0) {
-            velocity ++;
-            birdY -= velocity;
+            if (Gdx.input.justTouched()) {
+                velocity = -20;
+            }
+
+            if (birdY > 0 || velocity < 0) {
+                velocity ++;
+                birdY -= velocity + gravity;
+            }
         }
         else {
             if (Gdx.input.justTouched()) {
-                Gdx.app.log("Touched", "True");
                 gameState = 1;
             }
         }
