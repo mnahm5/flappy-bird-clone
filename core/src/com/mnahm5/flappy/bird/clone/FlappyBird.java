@@ -26,14 +26,7 @@ public class FlappyBird extends ApplicationAdapter {
 
     @Override
     public void render () {
-
-        if (flapState == 0) {
-            flapState = 1;
-        }
-        else {
-            flapState = 0;
-        }
-
+        Update();
         batch.begin();
         batch.draw(
                 background,
@@ -55,5 +48,19 @@ public class FlappyBird extends ApplicationAdapter {
         background.dispose();
         birds[0].dispose();
         birds[1].dispose();
+    }
+
+    public void Update()
+    {
+        if (Gdx.input.justTouched()) {
+            Gdx.app.log("Touched", "True");
+        }
+
+        if (flapState == 0) {
+            flapState = 1;
+        }
+        else {
+            flapState = 0;
+        }
     }
 }
