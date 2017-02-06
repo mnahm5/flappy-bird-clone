@@ -2,10 +2,13 @@ package com.mnahm5.flappy.bird.clone;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 
 import org.w3c.dom.Text;
 
@@ -14,11 +17,13 @@ import java.util.Random;
 public class FlappyBird extends ApplicationAdapter {
     private SpriteBatch batch;
     private Texture background;
+    private ShapeRenderer shapeRenderer;
 
     private Texture[] birds;
     private int flapState = 0;
     private float birdY = 0;
     private float velocity = 0;
+    private Circle birdCircle;
 
     private int gameState = 0;
     private float gravity = 2;
@@ -37,11 +42,14 @@ public class FlappyBird extends ApplicationAdapter {
     @Override
     public void create () {
         batch = new SpriteBatch();
+        shapeRenderer = new ShapeRenderer();
+
         background = new Texture("bg.png");
         birds = new Texture[2];
         birds[0] = new Texture("bird.png");
         birds[1] = new Texture("bird2.png");
         birdY = Gdx.graphics.getHeight() / 2 - birds[0].getHeight() / 2;
+        birdCircle = new Circle();
 
         topTube = new Texture("toptube.png");
         bottomTube = new Texture("bottomtube.png");
@@ -89,6 +97,16 @@ public class FlappyBird extends ApplicationAdapter {
                 birdY
         );
         batch.end();
+
+        birdCircle.set(
+                Gdx.graphics.getWidth() / 2,
+                birdY + birds[flapState].getHeight() / 2,
+                birds[flapState].getWidth() / 2
+        );
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.circle(birdCircle.x, birdCircle.y, birdCircle.radius);
+        shapeRenderer.end();
     }
 
     @Override
@@ -115,6 +133,7 @@ public class FlappyBird extends ApplicationAdapter {
 
                 if (tubeX[i] <= -topTube.getWidth()) {
                     tubeX[i] += noOfTubes * distanceBetweenTubes;
+                    tubeOffset[i] = (randomGenerator.nextFloat() - 0.5f) * maxTubeOffset;
                 }
                 else {
                     tubeX[i] -= tubeVelocity;
